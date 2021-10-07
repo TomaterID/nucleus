@@ -501,13 +501,16 @@ router.post('/:id/channel/:channelId/upload', noPendingMigrations, upload.any(),
           error: 'Looks like you tried to upload two or more files with the same file name',
         });
       }
+      /*
+      // this behaviour brakes compatibility with latest electron-forge versions
+      // which intentionaly break semver sintax for compatibility reasons
       for (const fileName of fileNames) {
         if (fileName.indexOf(req.body.version) === -1) {
           return res.status(400).json({
             error: `The file name "${fileName}" did not contain the provided version, files uploaded to nucleus must contain the version to ensure cache busting`,
           });
         }
-      }
+      }*/
       const temporaryStore = await driver.saveTemporaryVersionFiles(
         req.targetApp,
         channel,
