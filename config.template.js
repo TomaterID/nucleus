@@ -111,7 +111,10 @@ module.exports = {
    *
    * The `adminIdentifiers` array should be a list of email
    * addresses for users to consider admins
-   *
+   * 
+   * The `allowedUserIdentifiers` array should be a list of GitHub users
+   *  who are allowed to login, or empty is everyone is allowed
+   * 
    * realm: The domain that the server is hosted on
    * stateless: Stateless mode for openID
    * profile: Whether to fetch profile information, should normally be true
@@ -131,7 +134,10 @@ module.exports = {
    *
    * The `adminIdentifiers` array should be a list of GitHub usernames
    * to consider admins
-   *
+   * 
+   * The `allowedUserIdentifiers` array should be a list of users
+   *  who are allowed to login, or empty is everyone is allowed
+   * 
    * clientID: GitHub API client ID
    * clientSecret: GitHub API clientSecret
    * realm: The domain the server is hosted on
@@ -145,6 +151,11 @@ module.exports = {
    * See the documentation for your authentication strategy for what this array does
    */
   adminIdentifiers: ['admin@yourdomain.com', 'charlie'],
+
+   /**
+   * If not empty, only listed users from GitHub will be able to login
+   */
+  allowedUserIdentifiers: ['admin@yourdomain.com', 'charlie'],
 
   /**
    * Session options, in development just leave this as default.

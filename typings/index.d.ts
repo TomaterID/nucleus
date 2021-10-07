@@ -69,6 +69,7 @@ interface IConfig {
   github: GitHubOptions;
   openid: OpenIDOptions;
   adminIdentifiers: string[];
+  allowedUserIdentifiers: string[];
   s3: S3Options;
   local: LocalOptions;
   sequelize: SequelizeOptions;

@@ -1,7 +1,7 @@
 import * as passport from 'passport';
 const { Strategy } = require('passport-openid');
 
-import { baseURL, openid, adminIdentifiers } from '../../config';
+import { baseURL, openid, adminIdentifiers, allowedUserIdentifiers } from '../../config';
 import { OpenIDStrategyType } from './_types';
 
 const noop = () => '';
@@ -31,7 +31,9 @@ export const useOpenID = () => {
       ],
     };
 
-    cb(null, user);
+    const allowed_user = allowedUserIdentifiers.length === 0 || allowedUserIdentifiers.indexOf(email.value) !== -1;    
+
+    cb(null, allowed_user?user:false);
   }));
   return 'openid';
 };
