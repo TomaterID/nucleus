@@ -155,7 +155,7 @@ export default class SequelizeDriver extends BaseDriver {
   public async createChannel(app: NucleusApp, channelName: string) {
     await this.ensureConnected();
     const channel = new Channel({
-      stringId: hat(),
+      stringId: ['public','release'].includes(channelName)?channelName:hat(),
       name: channelName,
       appId: app.id,
     });
