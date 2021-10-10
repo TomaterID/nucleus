@@ -110,6 +110,10 @@ export default class Positioner {
     return path.posix.join(app.slug, channel.id, 'latest', file.platform, file.arch, `${app.name}${ext}`);
   }
 
+  public getWindowsKey(app: NucleusApp, channel: NucleusChannel, version: NucleusVersion, file: NucleusFile) {
+    return path.posix.join(app.slug, channel.id, 'win32', file.arch, file.fileName);
+  }  
+
   /**
    * Given a version for an app / channel check if any of the files should be uploaded to the "latest"
    * positioning.  This will only occur if the rollout is 100 and the version is the "latest" according
