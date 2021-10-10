@@ -28,11 +28,13 @@ export const generateWin32ReleasesStructure = async ({
   for (const version of versions.sort((a, b) => semver.compare(a.name, b.name))) {
     for (const file of version.files) {
       if (file.fileName.endsWith('-full.nupkg') || file.fileName.endsWith('-delta.nupkg')) {
-        const fileSize = await store.getFileSize(positioner.getIndexKey(app, channel, version, file));
-        const absoluteUrl = `${await store.getPublicBaseUrl()}/${root}/${file.fileName}`;
-        releases.push(
-          `${file.sha1.toUpperCase()} ${absoluteUrl} ${fileSize}`,
-        );
+        if ( arch === file.arch ) {
+          const fileSize = await store.getFileSize(positioner.getIndexKey(app, channel, version, file));
+          const absoluteUrl = `${await store.getPublicBaseUrl()}/${root}/${file.fileName}`;
+          releases.push(
+            `${file.sha1.toUpperCase()} ${absoluteUrl} ${fileSize}`,
+          );            
+        }
       }
     }
   }
