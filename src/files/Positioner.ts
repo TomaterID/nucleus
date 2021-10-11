@@ -78,7 +78,7 @@ export default class Positioner {
     if (file.arch !== 'ia32' && file.arch !== 'x64') return;
     d(`Handling upload (${file.fileName}) for app (${app.slug}) and channel (${channel.name}) for version (${internalVersion.name}) on platform/arch (${file.platform}/${file.arch})`);
 
-    if (!process.env.NO_NUCLEUS_INDEX) {
+    if ( process.env.NO_NUCLEUS_INDEX === undefined) {
       // Insert into file index for retreival later, this is purely to avoid making assumptions
       // about file lifetimes for all platforms or assumptions about file positions or assumptions
       // about file names containing version strings (which are currently enforced but may not be
