@@ -28,7 +28,7 @@ export const generateWin32ReleasesStructure = async ({
   for (const version of versions.sort((a, b) => semver.compare(a.name, b.name))) {
     for (const file of version.files) {
       if (file.fileName.endsWith('-full.nupkg') || file.fileName.endsWith('-delta.nupkg')) {
-        if ( arch === file.arch ) {
+        if ( arch === file.arch && file.sha1 ) {
           const fileSize = await store.getFileSize(positioner.getWindowsKey(app, channel, version, file));
           const absoluteUrl = `${await store.getPublicBaseUrl()}/${root}/${file.fileName}`;
           releases.push(
