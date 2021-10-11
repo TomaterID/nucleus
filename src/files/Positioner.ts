@@ -110,9 +110,19 @@ export default class Positioner {
     return path.posix.join(app.slug, channel.id, 'latest', file.platform, file.arch, `${app.name}${ext}`);
   }
 
-  public getWindowsKey(app: NucleusApp, channel: NucleusChannel, version: NucleusVersion, file: NucleusFile) {
-    return path.posix.join(app.slug, channel.id, 'win32', file.arch, file.fileName);
-  }  
+  public getPublicKey(app: NucleusApp, channel: NucleusChannel, version: NucleusVersion, file: NucleusFile) {
+    if ( file.platform === 'win32' || file.platform === 'darwin' ) {
+      return path.posix.join(app.slug, channel.id, file.platform, file.arch, file.fileName);
+    }
+    if ( file.platform === 'linux' ) {
+      if (file.fileName.endsWith('.rpm'))
+        return path.posix.join(app.slug, channel.id, file.platform, 'redhat', file.fileName);
+      if (file.fileName.endsWith('.deb'))
+        return path.posix.join(app.slug, channel.id, file.platform, 'debian', 'binary', file.fileName);
+    }
+    console.warn('File location is unknown');
+    return '';
+  }    
 
   /**
    * Given a version for an app / channel check if any of the files should be uploaded to the "latest"
@@ -135,7 +145,7 @@ export default class Positioner {
         if (file.type !== 'installer') continue;
 
         const latestKey = this.getLatestKey(app, channel, version, file);
-        const indexKey = this.getIndexKey(app, channel, version, file);
+        const indexKey = this.getPublicKey(app, channel, version, file);
 
         latestThings[latestKey] = {
           indexKey,
