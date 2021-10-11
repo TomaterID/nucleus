@@ -145,7 +145,7 @@ export default class Positioner {
         if (file.type !== 'installer') continue;
 
         const latestKey = this.getLatestKey(app, channel, version, file);
-        const indexKey = this.getPublicKey(app, channel, version, file);
+        const indexKey = this.getIndexKey(app, channel, version, file);
 
         latestThings[latestKey] = {
           indexKey,
