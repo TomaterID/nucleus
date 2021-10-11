@@ -116,9 +116,9 @@ export default class Positioner {
     }
     if ( file.platform === 'linux' ) {
       if (file.fileName.endsWith('.rpm'))
-        return path.posix.join(app.slug, channel.id, file.platform, 'redhat', file.fileName);
+        return path.posix.join(app.slug, channel.id, file.platform, 'redhat', version.name+'-'+file.fileName);
       if (file.fileName.endsWith('.deb'))
-        return path.posix.join(app.slug, channel.id, file.platform, 'debian', 'binary', file.fileName);
+        return path.posix.join(app.slug, channel.id, file.platform, 'debian', 'binary', version.name+'-'+file.fileName);
     }
     console.warn('File location is unknown');
     return '';
