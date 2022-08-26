@@ -19,7 +19,7 @@ Headers:
   Authorization: <AppAuthorizationToken>
 BODY:
   platform: String - One of 'darwin', 'win32' and 'linux'
-  arch: String - One of 'ia32' and 'x64'
+  arch: String - One of 'ia32', 'arm64' and 'x64'
   version: String
 FILES:
   <AnyString>: File
