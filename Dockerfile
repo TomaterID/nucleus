@@ -1,12 +1,17 @@
-FROM node:8
+#FROM debian:10-slim
+FROM ubuntu:22.04
 
-RUN apt update && apt install createrepo dpkg-dev apt-utils gnupg2 gzip -y && rm -rf /var/lib/apt/lists/*
+#RUN apt-get update --fix-missing && apt-get install createrepo dpkg-dev apt-utils gnupg2 gzip curl -y && rm -rf /var/lib/apt/lists/*
+RUN apt-get update --fix-missing && apt-get install createrepo-c dpkg-dev apt-utils gnupg2 gzip curl -y && rm -rf /var/lib/apt/lists/*
+
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+RUN bash -i -c "nvm install 8"
+RUN bash -i -c "npm install --global yarn"
 
 WORKDIR /opt/service
 
 # Copy PJ, changes should invalidate entire image
 COPY package.json yarn.lock /opt/service/
-
 
 # Copy commong typings
 COPY typings /opt/service/typings
@@ -23,8 +28,8 @@ COPY public /opt/service/public
 COPY webpack.*.js postcss.config.js README.md /opt/service/
 
 # Install dependencies
-RUN yarn --cache-folder ../ycache && yarn build:server && yarn build:fe:prod && yarn --production --cache-folder ../ycache && rm -rf ../ycache
+RUN bash -i -c "yarn --cache-folder ../ycache && yarn build:server && yarn build:fe:prod && yarn --production --cache-folder ../ycache && rm -rf ../ycache"
 
 EXPOSE 8080
 
-ENTRYPOINT ["npm", "run", "start:server:prod", "--"]
+ENTRYPOINT ["bash", "-i", "-c", "npm run start:server:prod --"]
