@@ -166,16 +166,18 @@ export default class Positioner {
   private async copyFile(fromKey: string, toKey: string, ref = '') {
     const refKey = `${toKey}.ref`;
     if (!ref || (await this.store.getFile(refKey)).toString() !== ref) {
-      await this.store.putFile(
-        toKey,
-        await this.store.getFile(fromKey),
-        true,
-      );
-      await this.store.putFile(
-        refKey,
-        Buffer.from(ref),
-        true,
-      );
+      if(await this.store.hasFile(fromKey)) {
+        await this.store.putFile(
+          toKey,
+          await this.store.getFile(fromKey),
+          true,
+        );
+        await this.store.putFile(
+          refKey,
+          Buffer.from(ref),
+          true,
+        );
+      }
     }
   }
 
