@@ -1,8 +1,6 @@
-#FROM debian:10-slim
 FROM ubuntu:22.04
 
-#RUN apt-get update --fix-missing && apt-get install createrepo dpkg-dev apt-utils gnupg2 gzip curl -y && rm -rf /var/lib/apt/lists/*
-RUN apt-get update --fix-missing && apt-get install createrepo-c dpkg-dev apt-utils gnupg2 gzip curl -y && rm -rf /var/lib/apt/lists/*
+RUN apt-get update --fix-missing && apt-get install createrepo-c dpkg-dev apt-utils gnupg2 gzip rpm curl -y && rm -rf /var/lib/apt/lists/*
 
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 RUN bash -i -c "nvm install 8"
@@ -32,4 +30,10 @@ RUN bash -i -c "yarn --cache-folder ../ycache && yarn build:server && yarn build
 
 EXPOSE 8080
 
-ENTRYPOINT ["bash", "-i", "-c", "npm run start:server:prod --"]
+# символьная ссылка на утилиту createrepo_c
+RUN ln -s /usr/bin/createrepo_c /usr/bin/createrepo
+
+# включаем отладку Nucleus
+ENV DEBUG *
+
+CMD ["bash", "-i", "-c", "npm run start:server:prod --"]
