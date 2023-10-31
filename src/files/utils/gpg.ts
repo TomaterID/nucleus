@@ -23,6 +23,27 @@ export const gpgSign = async (file: string, out: string) => {
   });
 };
 
+// Нужно для подписания файла InRelease, без него не работает автообновление
+// на свежих версиях Ubuntu. Отличается он тем, что подпись в самом файле находится
+// Для этого при подписании нужен ключ --clear-sign
+// https://unix.stackexchange.com/a/403489
+export const gpgClearSign = async (file: string, out: string) => {
+  await withTmpDir(async (tmpDir) => {
+    const key = path.resolve(tmpDir, 'key.asc');
+    await fs.writeFile(key, config.gpgSigningKey);
+    const [stdout, stderr] = await spawnPromiseAndCapture('gpg', ['--import', key]);
+    try { await fs.remove(out); } catch (err) {}
+    const keyImport = stdout.toString() + '--' + stderr.toString();
+    const keyMatch = keyImport.match(/ key ([A-Za-z0-9]+):/);
+    if (!keyMatch || !keyMatch[1]) {
+      console.error(JSON.stringify(keyImport));
+      throw new Error('Bad GPG import');
+    }
+    const keyId = keyMatch[1];
+    await cp.spawn('gpg', ['-abs', '--default-key', keyId, '--clear-sign', '-o', out, file], { capture: [ 'stdout', 'stderr' ]});
+  });
+};
+
 export const isGpgKeyValid = async () => {
   if (!config.gpgSigningKey) return false;
   return await withTmpDir(async (tmpDir) => {

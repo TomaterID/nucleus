@@ -2,7 +2,7 @@ import * as cp from 'child-process-promise';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 
-import { gpgSign } from './gpg';
+import { gpgSign, gpgClearSign } from './gpg';
 import { syncDirectoryToStore, syncStoreToDirectory } from './sync';
 import { withTmpDir } from './tmp';
 import * as config from '../../config';
@@ -70,6 +70,8 @@ APT::FTPArchive::Release::Description "${app.name}";`);
   });
   await fs.writeFile(path.resolve(tmpDir, 'Release'), stdout);
   await gpgSign(path.resolve(tmpDir, 'Release'), path.resolve(tmpDir, 'Release.gpg'));
+  // Делаем еще файл InRelease - требуется для более новых версий Ubuntu
+  await gpgClearSign(path.resolve(tmpDir, 'Release'), path.resolve(tmpDir, 'InRelease'));
   await fs.remove(configFile);
 };
 
